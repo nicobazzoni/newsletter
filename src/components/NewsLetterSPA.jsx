@@ -16,7 +16,12 @@ export default function NewsletterSPA() {
   const editorRef = useRef(null);
 
   const handleAIResponse = (parsed) => {
-    const { topUpdates = '', shoutout = '' } = parsed;
+    if (!parsed || typeof parsed !== 'object') {
+      console.error('Invalid AI response:', parsed);
+      return;
+    }
+    const topUpdates = parsed.topUpdates || '';
+    const shoutout = parsed.shoutout || '';
     setCombinedContent(`${topUpdates}<br/><br/>${shoutout}`);
     setImageKeywords(parsed.imageKeywords || []);
   };
