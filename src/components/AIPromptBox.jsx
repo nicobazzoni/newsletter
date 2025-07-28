@@ -38,13 +38,38 @@ Make it feel alive. Example topics: a team rollout, new equipment, surprise donu
       });
 
       const data = await res.json();
-      let raw = data.choices[0].message.content;
-      console.log('RAW AI OUTPUT:', raw);
+      if (!res.ok) {
+        console.error('API error:', res.status, data);
+        throw new Error('OpenAI API error');
+      }
 
-      // Clean up any markdown formatting
-      raw = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+      if (!data.choices || !data.choices[0]) {
+        console.error('Unexpected OpenAI response:', data);
+        throw new Error('Invalid response from OpenAI');
+      }
 
-      const parsed = JSON.parse(raw);
+      const content = data.choices[0].message?.content;
+      if (!content) {
+        throw new Error("Missing content in OpenAI response");
+      }
+
+      console.log('RAW AI OUTPUT:', content);
+
+      // Clean up markdown formatting
+      const cleaned = content.replace(/```json/g, '').replace(/```/g, '').trim();
+
+      let parsed;
+      try {
+        parsed = JSON.parse(cleaned);
+      } catch (jsonErr) {
+        console.error('Failed to parse JSON:', cleaned);
+        throw jsonErr;
+      }
+
+      if (!parsed.topUpdates || !parsed.shoutout) {
+        throw new Error("Missing expected fields in AI response");
+      }
+
       onResponse(parsed);
     } catch (err) {
       console.error('AI error:', err);
