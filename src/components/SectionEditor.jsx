@@ -46,10 +46,7 @@ useEffect(() => {
         <button onClick={() => document.execCommand('bold')} className="px-2 py-1 border rounded">Bold</button>
         <button onClick={() => document.execCommand('italic')} className="px-2 py-1 border rounded">Italic</button>
         <button onClick={() => document.execCommand('underline')} className="px-2 py-1 border rounded">Underline</button>
-        <button onClick={() => {
-          const url = prompt("Enter image URL:");
-          if (url) insertImageAtCursor(url);
-        }} className="px-2 py-1 border rounded">Image</button>
+        
         <label className="px-2 py-1 border rounded cursor-pointer">
           Upload Image
           <input
