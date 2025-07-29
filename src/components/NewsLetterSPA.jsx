@@ -7,6 +7,11 @@ import { addDoc, collection, Timestamp } from 'firebase/firestore';
 import { getStorage, ref, uploadString, getDownloadURL } from 'firebase/storage';
 import { useNavigate } from 'react-router-dom';
 
+import { Link } from 'react-router-dom';
+
+
+
+
 export default function NewsletterSPA() {
   const [combinedContent, setCombinedContent] = useState('');
   const [imageKeywords, setImageKeywords] = useState([]);
@@ -33,6 +38,8 @@ export default function NewsletterSPA() {
     return getDownloadURL(storageRef);
   };
 
+
+
   const handleSave = async () => {
     setLoading(true);
     try {
@@ -58,7 +65,15 @@ export default function NewsletterSPA() {
 
   return (
     <div className="max-w-3xl mx-auto p-6">
-      <h1 className="text-2xl font-bold mb-4">🧠 Smart Newsletter Builder</h1>
+         <div className="mt-4 justify-between flex border-black border-2  items-center bg-blue-300 p-3 mb-2 shadow ">
+      <h1 className="text-2xl font-bold mb-4">🧠 Tech Op Times Creator </h1>
+     
+  <Link to="/newsletters" className="text-blue-600 border bg-white rounded-full p-2 mx-2 mb-2">
+    View All Newsletters
+  </Link>
+</div>
+
+
 
       <AIPromptBox onResponse={handleAIResponse} />
 

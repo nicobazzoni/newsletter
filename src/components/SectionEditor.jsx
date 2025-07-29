@@ -46,6 +46,43 @@ useEffect(() => {
         <button onClick={() => document.execCommand('bold')} className="px-2 py-1 border rounded">Bold</button>
         <button onClick={() => document.execCommand('italic')} className="px-2 py-1 border rounded">Italic</button>
         <button onClick={() => document.execCommand('underline')} className="px-2 py-1 border rounded">Underline</button>
+     
+    <button
+  onClick={() => {
+    const url = prompt("Enter the link URL:");
+    if (!url) return;
+
+    let displayText = prompt("Enter the text to display for the link:");
+    if (!displayText) displayText = url; // fallback if they skip text
+
+    const selection = window.getSelection();
+    const range = selection.rangeCount > 0 ? selection.getRangeAt(0) : null;
+
+    if (range && !selection.isCollapsed) {
+      // If user has text selected, just create the link
+      document.execCommand("createLink", false, url);
+    } else {
+      // If no text selected, insert the display text as a link
+      const link = document.createElement("a");
+      link.href = url;
+      link.textContent = displayText;
+      link.target = "_blank";
+      link.style.color = "#2563eb"; // Tailwind blue-600
+      link.style.textDecoration = "underline";
+      link.style.fontWeight = "500";
+
+      if (range) {
+        range.insertNode(link);
+        range.collapse(false);
+      }
+    }
+  }}
+  className="px-2 py-1 border rounded hover:bg-gray-100"
+>
+  Link
+</button>
+  
+
         
         <label className="px-2 py-1 border rounded cursor-pointer">
           Upload Image
@@ -64,10 +101,12 @@ useEffect(() => {
             }}
             className="hidden"
           />
+
         </label>
         <button onClick={() => document.execCommand('foreColor', false, '#e63946')} className="px-2 py-1 border rounded text-red-600">Red</button>
         <button onClick={() => document.execCommand('fontName', false, 'Courier New')} className="px-2 py-1 border rounded">Mono</button>
       </div>
+      
 
       <div
         ref={editorRef}
