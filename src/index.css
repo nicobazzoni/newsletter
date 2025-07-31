@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+blockquote {
+  @apply text-xl italic border-l-4 border-blue-600 pl-4 text-gray-700;
+}

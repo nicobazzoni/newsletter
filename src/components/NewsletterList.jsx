@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Link } from 'react-router-dom';
 
@@ -10,7 +10,12 @@ export default function NewsletterList() {
   useEffect(() => {
     const fetchNewsletters = async () => {
       try {
-        const snapshot = await getDocs(collection(db, 'newsletters'));
+        // ✅ Query ordered by createdAt DESC
+        const q = query(
+          collection(db, 'newsletters'),
+          orderBy('createdAt', 'desc')
+        );
+        const snapshot = await getDocs(q);
         const list = snapshot.docs.map(doc => ({
           id: doc.id,
           ...doc.data(),
