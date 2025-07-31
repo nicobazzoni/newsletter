@@ -74,6 +74,8 @@ export default function NewsletterSPA() {
         </Link>
       </div>
 
+     
+
       <AIPromptBox onResponse={handleAIResponse} />
 
       <input
