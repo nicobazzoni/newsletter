@@ -1,19 +1,28 @@
+// src/pages/NewsletterDetail.jsx
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { db } from '../firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import tech from '../assets/TECHOPS.png'
+import tech from '../assets/TECHOPS.png';
 import html2pdf from 'html2pdf.js';
-import { Link } from 'react-router-dom';
+
 export default function NewsletterDetail() {
   const { id } = useParams();
   const [newsletter, setNewsletter] = useState(null);
   const [htmlContent, setHtmlContent] = useState('');
 
+  const themes = {
+    classic: "bg-white text-black",
+    dark: "bg-gray-900 text-white",
+    bluewave: "bg-gradient-to-b from-blue-600 to-blue-400 text-white",
+    sunrise: "bg-gradient-to-b from-orange-500 to-yellow-300 text-black"
+  };
+
   const handleDownloadPDF = () => {
-  const element = document.getElementById('newsletter-content');
-  html2pdf().from(element).save('newsletter.pdf');
-};
+    const element = document.getElementById('newsletter-content');
+    html2pdf().from(element).save('newsletter.pdf');
+  };
+
   useEffect(() => {
     const fetchNewsletter = async () => {
       const ref = doc(db, 'newsletters', id);
@@ -22,7 +31,6 @@ export default function NewsletterDetail() {
         const data = snap.data();
         setNewsletter(data);
 
-        // Fetch HTML from Firebase Storage
         if (data.contentUrl) {
           const res = await fetch(data.contentUrl);
           const html = await res.text();
@@ -36,17 +44,16 @@ export default function NewsletterDetail() {
   if (!newsletter) return <p className="p-4">Loading newsletter...</p>;
 
   return (
-    <div className="max-w-3xl mx-auto p-6 space-y-4">
+    <div className={` mx-auto p-6 ${themes[newsletter.theme] || ''}`}>
       <div id="newsletter-content">
         <div className="text-center border-b pb-4">
           <img src={tech} alt="Tech Op Times" className="w-full max-h-40" />
         </div>
 
         <h1 className="text-2xl text-center underline font-bold">{newsletter.title}</h1>
-        <div style={{ overflow: 'auto' }}>
-          <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />
-        </div>
+        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />
       </div>
+
       <div className="flex justify-end gap-4 mt-4">
         <button
           onClick={handleDownloadPDF}
@@ -71,11 +78,7 @@ export default function NewsletterDetail() {
         >
           Share
         </button>
-       <div>
-        <Link to='/'>
-        Home
-        </Link>
-       </div>
+        <Link to="/" className="bg-white border px-4 py-2 rounded">Home</Link>
       </div>
 
       <footer className="mt-8 text-sm text-gray-500 border-t pt-4 flex justify-between">
@@ -85,10 +88,6 @@ export default function NewsletterDetail() {
           <a href="https://www.foxnews.com" target="_blank" rel="noopener noreferrer" className="underline text-blue-600">foxnews.com</a>
         </div>
       </footer>
-
-      <style>{`
-        img { max-width: 100%; height: auto; }
-      `}</style>
     </div>
   );
 }
