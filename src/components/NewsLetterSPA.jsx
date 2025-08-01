@@ -85,7 +85,7 @@ export default function NewsletterSPA() {
         className="w-full p-2 my-4 border rounded"
       />
 
-      <label className="font-semibold">Theme</label>
+      <label className="font-semibold p-2">Theme</label>
       <select
         value={theme}
         onChange={(e) => setTheme(e.target.value)}

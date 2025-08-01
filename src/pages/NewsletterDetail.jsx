@@ -1,4 +1,3 @@
-// src/pages/NewsletterDetail.jsx
 import React, { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { db } from '../firebase';
@@ -44,14 +43,31 @@ export default function NewsletterDetail() {
   if (!newsletter) return <p className="p-4">Loading newsletter...</p>;
 
   return (
-    <div className={` mx-auto p-6 ${themes[newsletter.theme] || ''}`}>
+    <div className={`mx-auto p-6 ${themes[newsletter.theme] || ''}`}>
       <div id="newsletter-content">
         <div className="text-center border-b pb-4">
           <img src={tech} alt="Tech Op Times" className="w-full max-h-40" />
         </div>
 
         <h1 className="text-2xl text-center underline font-bold">{newsletter.title}</h1>
-        <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: htmlContent }} />
+        
+        {/* Center content and images */}
+        <div 
+          className="prose max-w-none mx-auto" 
+          style={{ textAlign: 'center' }} 
+          dangerouslySetInnerHTML={{ __html: htmlContent }} 
+        />
+
+        {/* Style for centering images */}
+        <style>
+          {`
+            #newsletter-content img {
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+            }
+          `}
+        </style>
       </div>
 
       <div className="flex justify-end gap-4 mt-4">

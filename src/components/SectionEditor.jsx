@@ -7,11 +7,15 @@ export default function SectionEditor({ content, onUpdate, imageKeywords = [], t
   const internalRef = useRef(null);
   const editorRef = forwardedRef || internalRef;
 
+  // Only update innerHTML if content prop truly changes
   useEffect(() => {
-    setLocalContent(content);
-    if (editorRef.current) {
-      editorRef.current.innerHTML = content;
+    if (content !== localContent) {
+      setLocalContent(content);
+      if (editorRef.current) {
+        editorRef.current.innerHTML = content;
+      }
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [content]);
 
   const saveSelection = () => {
@@ -107,17 +111,33 @@ export default function SectionEditor({ content, onUpdate, imageKeywords = [], t
 
         <button onClick={() => document.execCommand('foreColor', false, '#e63946')} className="px-2 py-1 border rounded text-red-600">Red</button>
         <button onClick={() => document.execCommand('fontName', false, 'Courier New')} className="px-2 py-1 border rounded">Mono</button>
+        <button
+  onClick={() => {
+    const selection = window.getSelection();
+    if (!selection.rangeCount) return;
+    const range = selection.getRangeAt(0);
+
+    const tile = document.createElement("div");
+    tile.className = "tile-block bg-white border rounded p-4 shadow hover:shadow-lg transition";
+    tile.innerHTML = selection.toString();
+
+    range.deleteContents();
+    range.insertNode(tile);
+  }}
+  className="px-2 py-1 border rounded"
+>
+  Tile
+</button>
       </div>
 
       <div
         ref={editorRef}
         contentEditable
-        className={`w-full border p-2 rounded min-h-[150px] bg-transparent ${textColorClass}`}
+        suppressContentEditableWarning={true}
+        className={`prose prose-lg max-w-2xl mx-auto border p-4 rounded bg-transparent ${textColorClass}`}
+        style={{ minHeight: localContent.trim() ? 'auto' : '150px' }}
         dangerouslySetInnerHTML={{ __html: localContent }}
         onInput={(e) => {
-          // Only update state on blur to preserve undo history
-        }}
-        onBlur={(e) => {
           const newContent = e.currentTarget.innerHTML;
           setLocalContent(newContent);
           onUpdate(newContent);
@@ -126,6 +146,17 @@ export default function SectionEditor({ content, onUpdate, imageKeywords = [], t
         onMouseUp={saveSelection}
         onKeyUp={saveSelection}
       />
+
+<style jsx>{`
+  .prose img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+`}</style>
 
       {imageKeywords.length > 0 && (
         <div className="mt-4">
