@@ -14,8 +14,37 @@ export default function SectionEditor({ content, onUpdate, imageKeywords = [], t
     }
   }, [content]);
 
+  const saveSelection = () => {
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount > 0) {
+      savedSelection.current = sel.getRangeAt(0);
+    }
+  };
+
   const insertImageAtCursor = (url) => {
-    document.execCommand('insertImage', false, url); // ✅ Use execCommand for undo support
+    const editor = editorRef.current;
+    if (!editor) return;
+
+    editor.focus();
+    saveSelection(); // Ensure we have the latest caret
+
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = '';
+    img.style.maxWidth = '24rem';
+    img.style.height = 'auto';
+    img.className = 'mt-2 rounded';
+
+    const range = savedSelection.current || document.createRange();
+    if (!editor.contains(range.startContainer)) {
+      range.selectNodeContents(editor);
+      range.collapse(false);
+    }
+    range.insertNode(img);
+    range.collapse(false);
+
+    setLocalContent(editor.innerHTML);
+    onUpdate(editor.innerHTML);
   };
 
   return (
@@ -93,18 +122,9 @@ export default function SectionEditor({ content, onUpdate, imageKeywords = [], t
           setLocalContent(newContent);
           onUpdate(newContent);
         }}
-        onMouseUp={() => {
-          const sel = window.getSelection();
-          if (sel && sel.rangeCount > 0) {
-            savedSelection.current = sel.getRangeAt(0);
-          }
-        }}
-        onKeyUp={() => {
-          const sel = window.getSelection();
-          if (sel && sel.rangeCount > 0) {
-            savedSelection.current = sel.getRangeAt(0);
-          }
-        }}
+        onFocus={saveSelection}
+        onMouseUp={saveSelection}
+        onKeyUp={saveSelection}
       />
 
       {imageKeywords.length > 0 && (
