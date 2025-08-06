@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap');
+
 blockquote {
   @apply text-xl italic border-l-4 border-blue-600 pl-4 text-gray-700;
 }
@@ -7,4 +9,9 @@ blockquote {
 .tile-block {
   display: inline-block;
   cursor: pointer;
+}
+
+
+.cormorant {
+  font-family: "Cormorant Garamond", serif;
 }

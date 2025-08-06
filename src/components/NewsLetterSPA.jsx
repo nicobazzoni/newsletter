@@ -98,7 +98,7 @@ export default function NewsletterSPA() {
       </select>
 
       {/* Live Preview */}
-      <div className={`p-4 rounded ${themes[theme]}`}>
+      <div className={`p-4 rounded cormorant ${themes[theme]}`}>
         <SectionEditor
           title="Newsletter"
           content={combinedContent}

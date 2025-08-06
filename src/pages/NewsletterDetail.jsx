@@ -45,7 +45,7 @@ export default function NewsletterDetail() {
   return (
     <div className={`mx-auto p-6 ${themes[newsletter.theme] || ''}`}>
       <div id="newsletter-content">
-        <div className="text-center border-b pb-4">
+        <div className="text-center border-b pb-4 ">
           <img src={tech} alt="Tech Op Times" className="w-full max-h-40" />
         </div>
 
@@ -53,7 +53,7 @@ export default function NewsletterDetail() {
         
         {/* Center content and images */}
         <div 
-          className="prose max-w-none mx-auto" 
+          className="prose max-w-none mx-auto cormorant" 
           style={{ textAlign: 'center' }} 
           dangerouslySetInnerHTML={{ __html: htmlContent }} 
         />

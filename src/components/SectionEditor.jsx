@@ -53,7 +53,7 @@ export default function SectionEditor({ content, onUpdate, imageKeywords = [], t
 
   return (
     <div className="p-4 rounded shadow">
-      <div className="mb-2 space-x-2">
+      <div className="mb-2 space-y-2 space-x-2">
         <button onClick={() => document.execCommand('undo')} className="px-2 py-1 border rounded">Undo</button>
         <button onClick={() => document.execCommand('redo')} className="px-2 py-1 border rounded">Redo</button>
         <button onClick={() => document.execCommand('bold')} className="px-2 py-1 border rounded">Bold</button>
@@ -118,13 +118,13 @@ export default function SectionEditor({ content, onUpdate, imageKeywords = [], t
     const range = selection.getRangeAt(0);
 
     const tile = document.createElement("div");
-    tile.className = "tile-block bg-white border rounded p-4 shadow hover:shadow-lg transition";
+tile.className = "tile-block bg-white text-black border rounded p-4 shadow hover:shadow-lg transition";
     tile.innerHTML = selection.toString();
 
     range.deleteContents();
     range.insertNode(tile);
   }}
-  className="px-2 py-1 border rounded"
+  className="px-2 py-1 border rounded text-black"
 >
   Tile
 </button>
@@ -134,7 +134,7 @@ export default function SectionEditor({ content, onUpdate, imageKeywords = [], t
         ref={editorRef}
         contentEditable
         suppressContentEditableWarning={true}
-        className={`prose prose-lg max-w-2xl mx-auto border p-4 rounded bg-transparent ${textColorClass}`}
+        className={`prose prose-lg max-w-2xl text0black mx-auto border p-4 rounded bg-transparent ${textColorClass}`}
         style={{ minHeight: localContent.trim() ? 'auto' : '150px' }}
         dangerouslySetInnerHTML={{ __html: localContent }}
         onInput={(e) => {
